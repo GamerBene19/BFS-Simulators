@@ -78,7 +78,7 @@ def indLoad(cellIdx: int):
 
 
 def indStore(cellIdx: int):
-    cells[cells[cellIdx]] = cells[0]
+    store(cells[cellIdx])
 
 
 def indAdd(cellIdx: int):
