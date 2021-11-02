@@ -7,9 +7,8 @@ This is a simulator for a Random Access Machine (as defined in our course)
 ## Program input
 
 The program excepts a `program.txt` file located in the same directory as itself. That program has to consist of [supported commands](#supported-commands) each in its own line.  
-If a unknown string is encountered (also empty lines) the program exits and prints the line-number (0-indexed) that caused it to exit
-
-> Support for empty lines and comments (starting with `#`) planned, but not currently implemented)
+If a unknown string is encountered the program exits and prints the line-number (0-indexed) that caused it to exit.  
+Empty lines and lines starting with `//` or `#` are skipped (but you still have to set your `GOTO`s correctly (as if the lines were filled with normal code))
 
 ## Supported Commands
 

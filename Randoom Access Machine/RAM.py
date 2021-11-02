@@ -147,63 +147,70 @@ def ifCondition(comparisonOperator: str, comparisonValue: int, cellIdxOnSuccess:
         increaseCountAndSetNextLine()
 
 
+# Initialize global values
 count = 0
 cells = [0]
+
+# Read file
 lines = open(args.path, 'r').readlines()
+
+# Remove comments
+regex = re.compile("^(//|#).*")
+for i, line in enumerate(lines):
+    lines[i] = regex.sub("", line)
+
+# Commands that are of the form `COMAND([number])`
+normalCommands = {
+    "LOAD": load,
+    "STORE": store,
+    "ADD": add,
+    "SUB": sub,
+    "MULT": mult,
+    "DIV": div,
+    "END": done,
+    "C-LOAD": cLoad,
+    "C-ADD": cAdd,
+    "C-SUB": cSub,
+    "C-MULT": cMult,
+    "C-DIV": cDiv,
+    "IND-LOAD": indLoad,
+    "IND-STORE": indStore,
+    "IND-ADD": indAdd,
+    "IND-SUB": indSub,
+    "IND-MULT": indMult,
+    "IND-DIV": indDiv,
+}
+
 line = lines[0]
 while(True):
+    # Display verbose output
     if(args.verbose):
         print("Counter: {} Cells: {}".format(count, cells))
         print("Next command is: {}".format(line))
+    # Enable interactive mode
     if(args.interactive):
         input("Press Enter to continue...")
+    # Skip empty lines
+    if (len(line.strip()) == 0):
+        if (count+1 >= len(lines)):
+            done()
+        line = lines[count+1]
+
+    # Match different commands
+    endMatch = re.findall("^END", line, flags=re.MULTILINE)
     normalMatch = re.findall(
         "^(LOAD|STORE|ADD|SUB|MULT|DIV|END|C-LOAD|C-ADD|C-SUB|C-MULT|C-DIV|IND-LOAD|IND-STORE|IND-ADD|IND-SUB|IND-MULT|IND-DIV)\((\d+)\)", line, flags=re.MULTILINE)
     gotoMatch = re.findall("^(GOTO) (\d+|END)", line, flags=re.MULTILINE)
-
     ifMatch = re.findall(
         "^(IF) C0 (=|<=|>=|<|>) (\d+) (GOTO) (\d+|END)", line, flags=re.MULTILINE)
-    if (len(normalMatch) > 0):
-        operation = normalMatch[0][0]
-        opValue = int(normalMatch[0][1])
-        if (operation == "LOAD"):
-            load(opValue)
-        if (operation == "STORE"):
-            store(opValue)
-        if (operation == "ADD"):
-            add(opValue)
-        if (operation == "SUB"):
-            sub(opValue)
-        if (operation == "MULT"):
-            mult(opValue)
-        if (operation == "DIV"):
-            div(opValue)
-        if(operation == "END"):
-            done()
-        if (operation == "C-LOAD"):
-            cLoad(opValue)
-        if (operation == "C-ADD"):
-            cAdd(opValue)
-        if (operation == "C-SUB"):
-            cSub(opValue)
-        if (operation == "C-MULT"):
-            cMult(opValue)
-        if (operation == "C-DIV"):
-            cDiv(opValue)
-        if (operation == "IND-LOAD"):
-            indLoad(opValue)
-        if (operation == "IND-STORE"):
-            indStore(opValue)
-        if (operation == "IND-ADD"):
-            indAdd(opValue)
-        if (operation == "IND-SUB"):
-            indSub(opValue)
-        if (operation == "IND-MULT"):
-            indMult(opValue)
-        if (operation == "IND-DIV"):
-            indDiv(opValue)
-        increaseCountAndSetNextLine()
 
+    if(len(endMatch) > 0):
+        done()
+    elif (len(normalMatch) > 0):
+        command = normalMatch[0][0]
+        commandValue = int(normalMatch[0][1])
+        normalCommands[command](commandValue)
+        increaseCountAndSetNextLine()
     elif(len(gotoMatch) > 0):
         goto(gotoMatch[0][1])
     elif(len(ifMatch) > 0):
