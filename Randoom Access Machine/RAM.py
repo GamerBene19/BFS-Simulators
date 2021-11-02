@@ -176,7 +176,7 @@ while(True):
             mult(opValue)
         if (operation == "DIV"):
             div(opValue)
-        if(operation == "END"):
+        if (operation == "END"):
             done()
         if (operation == "C-LOAD"):
             cLoad(opValue)
