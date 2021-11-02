@@ -23,6 +23,8 @@ parser.add_argument('--verbose', dest='verbose', action='store_true',
                     help='wether or not to print extra information')
 parser.add_argument('--interactive', dest='interactive', action='store_true',
                     help='if set execution halts after every step and waits for user to press enter')
+parser.add_argument('--path', dest='path', type=str, default='program.txt',
+                    help='path to the file that contains the program')
 args = parser.parse_args()
 
 
@@ -147,7 +149,7 @@ def ifCondition(comparisonOperator: str, comparisonValue: int, cellIdxOnSuccess:
 
 count = 0
 cells = [0]
-lines = open('program.txt', 'r').readlines()
+lines = open(args.path, 'r').readlines()
 line = lines[0]
 while(True):
     if(args.verbose):
