@@ -1,4 +1,29 @@
 import re
+import argparse
+import warnings
+
+
+def make_wide(formatter, w=120, h=36):
+    # See https://stackoverflow.com/a/57655311
+    """Return a wider HelpFormatter, if possible."""
+    try:
+        # https://stackoverflow.com/a/5464440
+        # beware: "Only the name of this class is considered a public API."
+        kwargs = {'width': w, 'max_help_position': h}
+        formatter(None, **kwargs)
+        return lambda prog: formatter(prog, **kwargs)
+    except TypeError:
+        warnings.warn("argparse help formatter failed, falling back.")
+        return formatter
+
+
+parser = argparse.ArgumentParser(
+    description='Simulates a Random Access Machine', formatter_class=make_wide(argparse.ArgumentDefaultsHelpFormatter))
+parser.add_argument('--verbose', dest='verbose', action='store_true',
+                    help='wether or not to print extra information')
+parser.add_argument('--interactive', dest='interactive', action='store_true',
+                    help='if set execution halts after every step and waits for user to press enter')
+args = parser.parse_args()
 
 
 def done():
@@ -125,7 +150,11 @@ cells = [0]
 lines = open('program.txt', 'r').readlines()
 line = lines[0]
 while(True):
-    print("Counter: {} Cells: {}".format(count, cells))
+    if(args.verbose):
+        print("Counter: {} Cells: {}".format(count, cells))
+        print("Next command is: {}".format(line))
+    if(args.interactive):
+        input("Press Enter to continue...")
     normalMatch = re.findall(
         "^(LOAD|STORE|ADD|SUB|MULT|DIV|END|C-LOAD|C-ADD|C-SUB|C-MULT|C-DIV|IND-LOAD|IND-STORE|IND-ADD|IND-SUB|IND-MULT|IND-DIV)\((\d+)\)", line, flags=re.MULTILINE)
     gotoMatch = re.findall("^(GOTO) (\d+|END)", line, flags=re.MULTILINE)
