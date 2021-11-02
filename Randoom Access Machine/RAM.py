@@ -38,7 +38,7 @@ def add(cellIdx: int):
 
 
 def sub(cellIdx: int):
-    cells[0] += cells[cellIdx]
+    cells[0] -= cells[cellIdx]
     if (cells[0] < 0):
         cells[0] = 0
 
