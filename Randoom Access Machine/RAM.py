@@ -15,10 +15,12 @@ def increaseCountAndSetNextLine():
     line = lines[count]
 
 
-def goto(lineIdx: int):
+def goto(lineIdx: str):
     global count
     global line
-    count = lineIdx
+    if(lineIdx == "END"):
+        done()
+    count = int(lineIdx)
     if (count >= len(lines)):
         done()
     line = lines[count]
@@ -99,7 +101,7 @@ def indDiv(cellIdx: int):
     cells[0] //= cells[cells[cellIdx]]
 
 
-def ifCondition(comparisonOperator: str, comparisonValue: int, cellIdxOnSuccess: int):
+def ifCondition(comparisonOperator: str, comparisonValue: int, cellIdxOnSuccess: str):
     conditionIsTrue = False
     if(comparisonOperator == "=" and cells[0] == comparisonValue):
         conditionIsTrue = True
@@ -125,10 +127,11 @@ line = lines[0]
 while(True):
     print("Counter: {} Cells: {}".format(count, cells))
     normalMatch = re.findall(
-        "^(LOAD|STORE|ADD|SUB|MULT|DIV|GOTO|END|C-LOAD|C-ADD|C-SUB|C-MULT|C-DIV|IND-LOAD|IND-STORE|IND-ADD|IND-SUB|IND-MULT|IND-DIV)\((\d+)\)", line, flags=re.MULTILINE)
-    gotoMatch = re.findall("^(GOTO) (\d+)", line, flags=re.MULTILINE)
+        "^(LOAD|STORE|ADD|SUB|MULT|DIV|END|C-LOAD|C-ADD|C-SUB|C-MULT|C-DIV|IND-LOAD|IND-STORE|IND-ADD|IND-SUB|IND-MULT|IND-DIV)\((\d+)\)", line, flags=re.MULTILINE)
+    gotoMatch = re.findall("^(GOTO) (\d+|END)", line, flags=re.MULTILINE)
+
     ifMatch = re.findall(
-        "^(IF) C0 (=|<=|>=|<|>) (\d+) (GOTO) (\d+)", line, flags=re.MULTILINE)
+        "^(IF) C0 (=|<=|>=|<|>) (\d+) (GOTO) (\d+|END)", line, flags=re.MULTILINE)
     if (len(normalMatch) > 0):
         operation = normalMatch[0][0]
         opValue = int(normalMatch[0][1])
@@ -144,6 +147,8 @@ while(True):
             mult(opValue)
         if (operation == "DIV"):
             div(opValue)
+        if(operation == "END"):
+            done()
         if (operation == "C-LOAD"):
             cLoad(opValue)
         if (operation == "C-ADD"):
@@ -169,8 +174,8 @@ while(True):
         increaseCountAndSetNextLine()
 
     elif(len(gotoMatch) > 0):
-        goto(int(gotoMatch[0][1]))
+        goto(gotoMatch[0][1])
     elif(len(ifMatch) > 0):
-        ifCondition(ifMatch[0][1], int(ifMatch[0][2]), int(ifMatch[0][4]))
+        ifCondition(ifMatch[0][1], int(ifMatch[0][2]), ifMatch[0][4])
     else:
         exit("ERROR: Unknown command in line {}".format(count))

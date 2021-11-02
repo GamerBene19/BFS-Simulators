@@ -17,8 +17,6 @@ As introduced in our course the RAM supports the following commands:
 
 > Despite the look of the command, the `IF` operation only ever compares to c(0). E.g. `IF C1 = 0 GOTO 0` is not considered valid
 
-> `END` IS NOT IMPLEMENTED YET. Currently the program exits only when the counter is bigger than the number of lines in `program.txt`
-
 | Command            | Action               | Counter                                    | Description                                                                                                  |
 | ------------------ | -------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
 | `LOAD(i)`          | `c(0)=c(i)`          | `b=b+1`                                    | Loads value of cell i into accumulator (c0)                                                                  |
