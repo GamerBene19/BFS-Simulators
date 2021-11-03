@@ -41,6 +41,7 @@ As introduced in our course the RAM supports the following commands:
 | `C-DIV(l)`         | `c(0)=c(0)/l`        | `b=b+1`                                    | Same as `DIV` but uses constant `l`                                                                          |
 |                    |                      |                                            |                                                                                                              |
 | `IND-LOAD(i)`      | `c(0)=c(c(i))`       | `b=b+1`                                    | Same as `LOAD` but uses value stored in `i` as index                                                         |
+| `IND-STORE(i)`     | `c(c(i))=c(0)`       | `b=b+1`                                    | Same as `STORE` but uses value stored in `i` as index                                                        |
 | `IND-ADD(i)`       | `c(0)=c(0)+c(c(i))l` | `b=b+1`                                    | Same as `ADD` but uses value stored in `i` as index                                                          |
 | `IND-SUB(i)`       | `c(0)=c(0)-c(c(i))`  | `b=b+1`                                    | Same as `SUB` but uses value stored in `i` as index                                                          |
 | `IND-MULT(i)`      | `c(0)=c(0)*c(c(i))`  | `b=b+1`                                    | Same as `MULT` but uses value stored in `i` as index                                                         |
