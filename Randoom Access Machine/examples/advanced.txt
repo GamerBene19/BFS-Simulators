@@ -1,0 +1,8 @@
+// Should stop when reached 160
+C-LOAD(10)
+STORE(1)
+LOAD(1)
+IF C0 > 100 GOTO END
+ADD(1)
+STORE(1)
+GOTO 4

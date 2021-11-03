@@ -33,13 +33,24 @@ def done():
         count, cells))
 
 
+def isNextCountTooBig():
+    # The next count is too big if count+1 >= len(lines)+1` this can be simplified to:
+    return (count >= len(lines))
+
+
+def setNextLine():
+    global line
+    # Assumes count has already been updated
+    line = lines[count-1]
+
+
 def increaseCountAndSetNextLine():
     global count
     global line
-    count += 1
-    if (count >= len(lines)):
+    if (isNextCountTooBig()):
         done()
-    line = lines[count]
+    count += 1
+    setNextLine()
 
 
 def goto(lineIdx: str):
@@ -48,9 +59,9 @@ def goto(lineIdx: str):
     if(lineIdx == "END"):
         done()
     count = int(lineIdx)
-    if (count >= len(lines)):
+    if (count > len(lines)):
         done()
-    line = lines[count]
+    setNextLine()
 
 
 def load(cellIdx: int):
@@ -148,7 +159,7 @@ def ifCondition(comparisonOperator: str, comparisonValue: int, cellIdxOnSuccess:
 
 
 # Initialize global values
-count = 0
+count = 1
 cells = [0]
 
 # Read file
@@ -183,18 +194,19 @@ normalCommands = {
 
 line = lines[0]
 while(True):
+    # Skip empty lines
+    while (len(line.strip()) == 0):
+        increaseCountAndSetNextLine()
+        continue
+
     # Display verbose output
     if(args.verbose):
         print("Counter: {} Cells: {}".format(count, cells))
         print("Next command is: {}".format(line))
+
     # Enable interactive mode
     if(args.interactive):
         input("Press Enter to continue...")
-    # Skip empty lines
-    if (len(line.strip()) == 0):
-        if (count+1 >= len(lines)):
-            done()
-        line = lines[count+1]
 
     # Match different commands
     endMatch = re.findall("^END", line, flags=re.MULTILINE)
